@@ -5,12 +5,22 @@ let cookieParser = require('cookie-parser');
 let logger = require('morgan');
 
 //add database details to setup
-let dbInstance = require('./db/dbcon');
+//let dbInstance = require('./db/dbcon');
 
 let indexRouter = require('./routes/index');
 let usersRouter = require('./routes/users');
+let catalogRouter = require('./routes/catalog');  //Import routes for "catalog" area of site
 
 let app = express();
+
+
+//Set up mongoose connection
+let mongoose = require('mongoose');
+let mongoDB = 'mongodb://dba:mongodbadmin1@ds137404.mlab.com:37404/lf_local_library';
+mongoose.connect(mongoDB, { useNewUrlParser: true });
+mongoose.Promise = global.Promise;
+let db = mongoose.connection;
+db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -24,8 +34,10 @@ app.use(cookieParser());
 //get Express to server all static files in the /public dir.
 app.use(express.static(path.join(__dirname, 'public')));
 
+//routes added to middleware stack
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/catalog', catalogRouter);
 
 //add middleware handlers methods for errors and 404 responses
 // catch 404 and forward to error handler
