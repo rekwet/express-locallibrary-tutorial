@@ -4,17 +4,16 @@ let path = require('path');
 let cookieParser = require('cookie-parser');
 let logger = require('morgan');
 
-//add database details to setup
-//let dbInstance = require('./db/dbcon');
+// add database details to setup
+// let dbInstance = require('./db/dbcon');
 
 let indexRouter = require('./routes/index');
 let usersRouter = require('./routes/users');
-let catalogRouter = require('./routes/catalog');  //Import routes for "catalog" area of site
+let catalogRouter = require('./routes/catalog'); // Import routes for "catalog" area of site
 
-let app = express();
+let app = express()
 
-
-//Set up mongoose connection
+// Set up mongoose connection
 let mongoose = require('mongoose');
 let mongoDB = 'mongodb://dba:mongodbadmin1@ds137404.mlab.com:37404/lf_local_library';
 mongoose.connect(mongoDB, { useNewUrlParser: true });
@@ -26,27 +25,27 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
-//add middleware libraries
+// add middleware libraries
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-//get Express to server all static files in the /public dir.
+// get Express to server all static files in the ./public dir
 app.use(express.static(path.join(__dirname, 'public')));
 
-//routes added to middleware stack
+// routes added to middleware stack
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/catalog', catalogRouter);
 
-//add middleware handlers methods for errors and 404 responses
+// add middleware handlers methods for errors and 404 responses
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   next(createError(404));
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
@@ -56,6 +55,5 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-
-//add app let to the exports module so we can import in /bin/www 
+// add app let to the exports module so we can import in /bin/www
 module.exports = app;
