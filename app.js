@@ -16,6 +16,29 @@ let catalogRouter = require('./routes/catalog') // Import routes for "catalog" a
 
 let app = express()
 
+// setup lusca - app security
+let session = require('express-session')
+let lusca = require('lusca')
+
+// this or other session management will be required
+app.use(session({
+  secret: 'abc!20939@Fgdlkaouel',
+  cookie: { httpOnly: true, secure: true },
+  resave: true,
+  saveUninitialized: true
+}))
+
+app.use(lusca({
+  csrf: true,
+  csp: { /* ... */},
+  xframe: 'SAMEORIGIN',
+  p3p: 'ABCDEF',
+  hsts: { maxAge: 31536000, includeSubDomains: true, preload: true },
+  xssProtection: true,
+  nosniff: true,
+  referrerPolicy: 'same-origin'
+}))
+
 // use Helmet to activate the middelware and protect the app.
 app.use(helmet())
 
