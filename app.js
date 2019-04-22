@@ -4,43 +4,50 @@ let path = require('path')
 let cookieParser = require('cookie-parser')
 let logger = require('morgan')
 
+// compress all comm's to client and server
+// var compression = require('compression')
+
 // Use Helmet to protect against well known vulnerabilities
-let helmet = require('helmet')
+// let helmet = require('helmet')
 
 // add database details to setup
-// let dbInstance = require('./db/dbcon');
+let dbInstance = require('./db/dbcon');
 
 let indexRouter = require('./routes/index')
 let usersRouter = require('./routes/users')
-let catalogRouter = require('./routes/catalog') // Import routes for "catalog" area of site
+// let catalogRouter = require('./routes/catalog') // Import routes for "catalog" area of site
 
 let app = express()
 
+// app.use(compression()) // Compress all routes
+
 // setup lusca - app security
-let session = require('express-session')
-let lusca = require('lusca')
+// let session = require('express-session')
+// let lusca = require('lusca')
 
 // this or other session management will be required
-app.use(session({
-  secret: 'abc!20939@Fgdlkaouel',
-  cookie: { httpOnly: true, secure: true },
-  resave: true,
-  saveUninitialized: true
-}))
 
-app.use(lusca({
-  csrf: true,
-  csp: { /* ... */},
-  xframe: 'SAMEORIGIN',
-  p3p: 'ABCDEF',
-  hsts: { maxAge: 31536000, includeSubDomains: true, preload: true },
-  xssProtection: true,
-  nosniff: true,
-  referrerPolicy: 'same-origin'
-}))
+// app.use(session({
+//   secret: 'abc!20939@Fgdlkaouel',
+//   cookie: { httpOnly: true, secure: true },
+//   resave: true,
+//   saveUninitialized: true
+// }))
+
+
+// app.use(lusca({
+//   csrf: true,
+//   csp: { /* ... */},
+//   xframe: 'SAMEORIGIN',
+//   p3p: 'ABCDEF',
+//   hsts: { maxAge: 31536000, includeSubDomains: true, preload: true },
+//   xssProtection: true,
+//   nosniff: true,
+//   referrerPolicy: 'same-origin'
+// }))
 
 // use Helmet to activate the middelware and protect the app.
-app.use(helmet())
+// app.use(helmet())
 
 // Set up mongoose connection
 let mongoose = require('mongoose')
@@ -65,7 +72,7 @@ app.use(express.static(path.join(__dirname, 'public')))
 // routes added to middleware stack
 app.use('/', indexRouter)
 app.use('/users', usersRouter)
-app.use('/catalog', catalogRouter)
+// app.use('/catalog', catalogRouter)
 
 // add middleware handlers methods for errors and 404 responses
 // catch 404 and forward to error handler
